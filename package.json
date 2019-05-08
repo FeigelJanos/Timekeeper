@@ -1,0 +1,32 @@
+{
+  "name": "timekeeper",
+  "version": "1.0.0",
+  "description": "Timekeeper app",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FeigelJanos/Timekeeper.git"
+  },
+  "keywords": [
+    "react"
+  ],
+  "author": "Feigel János",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FeigelJanos/Timekeeper/issues"
+  },
+  "homepage": "https://github.com/FeigelJanos/Timekeeper#readme",
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.19.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.4",
+    "express": "^4.16.4",
+    "pg": "^7.10.0"
+  }
+}
