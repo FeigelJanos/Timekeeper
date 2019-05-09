@@ -12,8 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(bodyParser.json());
 
+let usersAPI = require('./api/users');
+app.use('/users', usersAPI);
 
-//app.use('/api/users', require('./api/users'));
+let tasksAPI = require('./api/tasks');
+app.use('/tasks', tasksAPI);
+
+let timesAPI = require('./api/times');
+app.use('/times', timesAPI);
 
 /*if (ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));

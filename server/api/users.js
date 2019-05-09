@@ -4,21 +4,29 @@ let Users = require('../models/users') ;
 
 let router = express.Router();
 
-console.log('Valami');
 
-
-router.get('/', (req, res) => {
-  Users.retrieveAll((err, cities) => {
+router.get('/all', (req, res) => {
+  Users.retrieveAll((err, users) => {
     if (err)
       return res.json(err);
-    return res.json(cities);
+    return res.json(users);
   });
 });
 
-router.post('/', (req, res) => {
-  var user = req.body.user;
+router.get('/', (req, res) => {
+  let user = req.body.user_name;
+  Users.retrieveUser(user, (err, users) => {
+    if (err)
+      return res.json(err);
+    return res.json(users);
+  });
+});
 
-  Users.insert(user, (err, result) => {
+router.post('/insert', (req, res) => {
+  let user = req.body.user_name;
+  let password = req.body.password;
+
+  Users.insert(user, password, (err, result) => {
     if (err)
       return res.json(err);
     return res.json(result);
