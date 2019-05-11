@@ -1,6 +1,9 @@
-body {
+*{
   margin: 0;
   padding: 0;
+}
+
+body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -11,4 +14,102 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.container{
+  width: 100vw;
+}
+
+.LogForm{
+  margin: 1em;
+}
+.bottomnav{
+  width: 100vw;
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-content: space-evenly;
+}
+
+.item-1{
+  grid-column: 1/2;
+}
+.item-2{
+  grid-column: 1/2;
+}
+.item-3{
+  grid-column: 2/3;
+}
+
+.reg-h1{
+  margin-top: 1em;
+  text-align: center;
+}
+.reg-h2{
+  margin: auto;
+  padding-top: 1.5em;
+  text-align: center;
+  font-size: 1.5em;
+}
+
+.log-h1{
+  margin-top: 1em;
+  margin-bottom: 2em;
+  text-align: center;
+}
+
+.form-4{
+  margin: 1em;
+}
+
+@media only screen and (min-width: 600px) { 
+  .LogForm{
+  height: 60vh;
+  padding: 2em;
+  margin-left: 10vw;
+} 
+
+.login-b{
+padding-left: 13vw;
+}
+
+.login-b button{
+  margin: auto;
+}
+
+.RegForm{
+  height: 80vh;
+  padding: 2em;
+  margin-left: 2em;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  align-content: center;
+  justify-content: center;
+}
+
+.form-1{
+  margin: 1em;
+  grid-column: 1/3;
+  grid-row: 1/2;
+}
+.form-2{
+  margin: 1em;
+  grid-column: 1/3;
+  grid-row: 2/3;
+}
+
+.form-3{
+  margin: 1em;
+  grid-column: 3/5;
+  grid-row: 1/3;
+}
+.form-4{
+  margin: 2em;
+  grid-column: 3/4;
+  grid-row: 3/4;
+  width: 200px;
+}
+
+  
 }

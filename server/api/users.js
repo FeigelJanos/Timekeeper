@@ -25,8 +25,9 @@ router.get('/', (req, res) => {
 router.post('/insert', (req, res) => {
   let user = req.body.user_name;
   let password = req.body.password;
+  let email = req.body.email;
 
-  Users.insert(user, password, (err, result) => {
+  Users.insert(user, password, email, (err, result) => {
     if (err)
       return res.json(err);
     return res.json(result);
