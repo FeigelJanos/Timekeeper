@@ -6,6 +6,7 @@ import Tasks from './components/tasks';
 import Register from './components/register';
 
 
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -16,14 +17,14 @@ class App extends Component {
     collapse: false,
     newTask: false,
     delete: false,
+    statistics: false,
     user: {
       name: '',
       password: '',
       id: 1
     },
-    tasks: [],
-    active: 0,
-    time: new Date()
+    tasks: [],  
+    time:'' 
   }
 }
 
@@ -31,32 +32,52 @@ toggle = ()=> {
   this.setState(state => ({ collapse: !state.collapse }));
 };
 
+toggleDelete = () =>{
+  this.setState(state => ({ delete: !state.delete, newTask: false }));
+};
+
 getNewTask = () =>{
   this.setState(state => ({ newTask: !state.newTask, delete: false }));
 };
 
-postNewTask = () =>{
-
+redirectToLogReg = () =>{
+  this.setState(state => ({register: !state.register, }));
 };
 
-changeTaskStatus = () =>{
-
+postNewTask = (task) =>{
+  fetch(`/tasks/insert`, {
+    method: 'post',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      task_name: task,
+      user_id: this.state.user.id
+    })
+  })
+  .then(res => res.json())
+  .then(res => {this.getTasks(this.state.user.id)});
+  this.setState({newTask: false, delete: false});
 };
 
-toggleDelete = () =>{
-  this.setState(state => ({ delete: !state.delete, newTask: false }));
-}
-
-deleteSelected = () =>{
-
-}
-
-getTime = () =>{
-
+deleteSelected = (selectedArr) =>{
+  selectedArr.map(id =>fetch(`/tasks/delete`, {
+    method: 'post',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      task_id: id,
+    })
+  })
+  .then(res => res.json())
+  .then(res => {this.getTasks(this.state.user.id)})
+  );
+  this.setState({newTask: false, delete: false});
 };
 
-addTime = () =>{
+activateTask = (id) =>{
+console.log(id)
+};
 
+deactivateTask = (time, finished) =>{
+console.log(`${time} time and ${finished}`);
 };
 
 login=()=>{
@@ -75,11 +96,12 @@ getTasks = (user_id) =>{
   };
 
   render(){
+
     if(!this.state.login){
       return (
         <div className="Login">
-          <TopBar aut={this.state.login}/>
-          {this.state.register?<Register />:<Login />}
+          <TopBar aut={this.state.login} logout={this.logout}/>
+          {this.state.register?<Register toLogin={this.redirectToLogReg}/>:<Login toRegister={this.redirectToLogReg}/> }
           <BottomBar />   
         </div>
       );
@@ -87,10 +109,11 @@ getTasks = (user_id) =>{
 
   return (
     <div className="App">
-      <TopBar aut={this.state.login}/>
+      <TopBar aut={this.state.login} logout={this.logout}/>
       <Tasks 
       onList={this.getTasks}
-      user={this.state.user.id} 
+      user={this.state.user.id}
+      name={this.state.user.name} 
       taskList={this.state.tasks} 
       toggle={this.toggle} 
       collapse={this.state.collapse} 
@@ -98,7 +121,12 @@ getTasks = (user_id) =>{
       reveal={this.getNewTask}
       delete={this.state.delete}
       toggleDelete={this.toggleDelete}
+      activateTask={this.activateTask}
+      deactivateTask={this.deactivateTask}
+      postNewTask={this.postNewTask}
+      deleteSelected={this.deleteSelected}
       />
+     
     </div>
   );
   }

@@ -3,6 +3,7 @@ import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
 class Register extends Component {
     
+
     render() { 
         return ( 
             <React.Fragment>
@@ -12,7 +13,7 @@ class Register extends Component {
                  <FormGroup className="form-1">
                     <Label for="name" sm={2}>Username:</Label>
                     <Col sm={10}>
-                        <Input type="text" name="name" id="name" placeholder="Your username" style={{maxWidth: "500px"}}/>
+                        <Input type="text" name="name" id="name" placeholder="Your username" style={{maxWidth: "500px"} }/>
                     </Col>
                 </FormGroup>
                 <FormGroup className="form-3">
@@ -31,7 +32,8 @@ class Register extends Component {
                         <Input type="email" name="email" id="email" placeholder="Your email" style={{maxWidth: "500px"}}/>
                     </Col>
                 </FormGroup>
-                <Button color="primary"  className="form-4">Register</Button>
+                <Button color="primary"  className="form-5">Register</Button>
+                <Button color="secondary"  className="form-4" onClick={this.props.toLogin}>Login</Button>
             </Form> 
             </React.Fragment>
         );

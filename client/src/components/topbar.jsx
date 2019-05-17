@@ -11,7 +11,11 @@ class TopBar extends Component {
         <React.Fragment>
             <Container fluid className="centered">
             <Navbar dark color="dark">
-            {this.props.login? <p>Logged in</p>:<NavbarBrand href='/'>Time Keeper</NavbarBrand>}
+            {this.props.aut? <div>
+                                <button onClick={this.props.logout}>Logout</button>
+                                <button>Statistics</button>
+                            </div>:<NavbarBrand href='/'>Time Keeper</NavbarBrand>}
+
                
             </Navbar>
             </Container>
