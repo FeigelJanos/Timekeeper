@@ -1,5 +1,6 @@
 const db = require('../database');
 
+
 module.exports = class Users {
   static retrieveAll (callback) {
     db.query('SELECT * from users', (err, res) => {
@@ -26,5 +27,15 @@ module.exports = class Users {
       callback(res);
     });
   }
+
+  static login (user, password, callback) {
+    db.query('SELECT * FROM users WHERE user_name = $1 AND password = $2', [user, password], (err, res) => {
+      if (err.error){
+        return callback(err);
+      }
+      callback(res);
+    });
+  }
+
 }
 

@@ -7,20 +7,25 @@ class Login extends Component {
       
       this.state = {
        username: '',
-       password: ''
+       password: '',
+       error: ''
       }
     }
 
-    handleName(event) {
+    handleName = e =>{
 
-        this.setState({username: event.target.value})
+        this.setState({username: e.target.value})
       
     };
 
-    handlePass(event) {
+    handlePass = e => {
 
-        this.setState({password: event.target.value})
+        this.setState({password: e.target.value})
       
+    };
+
+    handleSubmit = e =>{
+        e.preventDefault();
     };
 
     render() { 
@@ -28,6 +33,7 @@ class Login extends Component {
             <React.Fragment>
             <h1 className="log-h1">Welcome, please Log in or Register!</h1>
             <Form className="LogForm">
+                <span className="errorMessage">{this.state.error}</span>
                  <FormGroup row >
                     <Label for="name" sm={2}>Username:</Label>
                     <Col sm={10}>
@@ -37,7 +43,8 @@ class Login extends Component {
                                 placeholder="Your username" 
                                 style={{maxWidth: "500px"}} 
                                 value={this.state.username} 
-                                onChange={this.handleName.bind(this)}/>
+                                onChange={this.handleName.bind(this)}
+                        />
                     </Col>
                 </FormGroup>
                 <FormGroup row >
@@ -49,15 +56,23 @@ class Login extends Component {
                                 placeholder="Your password" 
                                 style={{maxWidth: "500px"}} 
                                 value={this.state.password} 
-                                onChange={this.handlePass.bind(this)}/>/>
+                                onChange={this.handlePass}
+                        />
                     </Col>
                 </FormGroup>
                 <div className="login-b">
-                    <Button color="primary" style={{margin: "1em"} } >Log in</Button>
+
+                    <Button color="primary" 
+                            style={{margin: "1em"}} 
+                            type="submit"
+                            onClick={this.handleSubmit}>
+                    Log in</Button>
+
                     <Button color="secondary" 
                             style={{marginTop: "1em", marginBottom: "1em", marginLeft: "1em"}} 
                             onClick={this.props.toRegister} >
                     Register</Button>
+                
                 </div>
             </Form> 
             </React.Fragment>

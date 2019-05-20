@@ -12,8 +12,8 @@ class TopBar extends Component {
             <Container fluid className="centered">
             <Navbar dark color="dark">
             {this.props.aut? <div>
-                                <button onClick={this.props.logout}>Logout</button>
-                                <button>Statistics</button>
+                                <button onClick={this.props.logout} className="nav-button">Logout</button>
+                                <button className="nav-button">Statistics</button>
                             </div>:<NavbarBrand href='/'>Time Keeper</NavbarBrand>}
 
                

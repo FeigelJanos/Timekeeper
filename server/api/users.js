@@ -34,4 +34,15 @@ router.post('/insert', (req, res) => {
   });
 });
 
+router.post('/login', (req, res) => {
+  let user = req.body.user_name;
+  let password = req.body.password;
+
+  Users.login(user, password, (err, result) => {
+    if (err)
+      return res.json(err);
+    return res.json(result);
+  });
+});
+
 module.exports = router;

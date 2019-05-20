@@ -19,8 +19,6 @@ class App extends Component {
     delete: false,
     statistics: false,
     user: {
-      name: '',
-      password: '',
       id: 1
     },
     tasks: [],  
@@ -80,11 +78,15 @@ deactivateTask = (time, finished) =>{
 console.log(`${time} time and ${finished}`);
 };
 
-login=()=>{
+login = (username, password) =>{
 
   };
 
-logout = ()=>{
+register = () =>{
+
+};
+
+logout = () =>{
 
 };
   
@@ -101,7 +103,8 @@ getTasks = (user_id) =>{
       return (
         <div className="Login">
           <TopBar aut={this.state.login} logout={this.logout}/>
-          {this.state.register?<Register toLogin={this.redirectToLogReg}/>:<Login toRegister={this.redirectToLogReg}/> }
+          {this.state.register?<Register toLogin={this.redirectToLogReg} register={this.register}/>
+                              :<Login toRegister={this.redirectToLogReg} login={this.login}/> }
           <BottomBar />   
         </div>
       );
