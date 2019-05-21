@@ -59,18 +59,18 @@ class Stopwatch extends Component {
     return (
       <div className="Stopwatch">
          <div className="activeTask">
-          {this.props.taskList.map(task => task.active?<button key={task.task_id} onClick={this.stopTimer}>{task.task_name}</button>:'')}
+          {this.props.taskList.map(task => task.active?<button key={task.task_id} onClick={this.stopTimer} className="task-active">{task.task_name}</button>:'')}
         </div>
-        <div className="Stopwatch-display">
+        <div className="stopwatch-display">
           {hours} : {minutes} : {seconds} 
         </div>
         {!this.state.timerOn?
-          <button onClick={this.startTimer}><i className="fas fa-play"></i></button>:
-          <button onClick={this.pauseTimer}><i className="fas fa-pause"></i></button>
+          <button onClick={this.startTimer} className="play-pause"><i className="fas fa-play"></i></button>:
+          <button onClick={this.pauseTimer} className="play-pause"><i className="fas fa-pause"></i></button>
         }
-          <button onClick={this.finishedTimer}><i className="fas fa-check-square"></i></button>
+          <button onClick={this.finishedTimer} className="check-button"><i className="fas fa-check-square"></i></button>
     
-          <button onClick={this.stopTimer}><i className="fas fa-stop"></i></button>
+          <button onClick={this.stopTimer} className="stop-button"><i className="fas fa-stop"></i></button>
         
       </div>
     );

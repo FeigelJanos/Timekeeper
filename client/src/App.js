@@ -12,14 +12,15 @@ class App extends Component {
     super(props);
   
   this.state = {
-    login: true,
+    login: false,
     register: false,
     collapse: false,
     newTask: false,
     delete: false,
     statistics: false,
     user: {
-      id: 1
+      id: 1,
+      name: ''
     },
     tasks: [],  
     time:'' 
@@ -82,9 +83,23 @@ login = (username, password) =>{
 
   };
 
-register = () =>{
-
+register = (username, password, email) =>{
+  if(username && password && email){
+    fetch(`/users/insert`, {
+    method: 'post',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      password: password,
+      user_name: username,
+      email: email
+    })
+  })
+  .then(res => res.json());
+  this.setState({register: false, login: false});
+}
+  
 };
+
 
 logout = () =>{
 

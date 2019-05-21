@@ -4,6 +4,10 @@ let Users = require('../models/users') ;
 
 let router = express.Router();
 
+let bcrypt = require('bcrypt');
+
+let saltRounds = 10;
+
 
 router.get('/all', (req, res) => {
   Users.retrieveAll((err, users) => {
@@ -23,8 +27,8 @@ router.get('/', (req, res) => {
 });
 
 router.post('/insert', (req, res) => {
-  let user = req.body.user_name;
   let password = req.body.password;
+  let user = req.body.user_name;
   let email = req.body.email;
 
   Users.insert(user, password, email, (err, result) => {

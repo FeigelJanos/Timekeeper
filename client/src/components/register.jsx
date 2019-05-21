@@ -1,27 +1,68 @@
 import React, { Component } from 'react';
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
+
+const emailRegex = RegExp(
+    /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+  );
+const userRegex = RegExp(
+                            /^[a-zA-Z0-9._-]{3,}$/
+);
+
 class Register extends Component {
     
     constructor(props) {
         super(props);
       
       this.state = {
-       username: '',
+       name: '',
        password: '',
        passwordAgain: '',
        email: '',
        formErrors: {
-        username: '',
-        password: '',
-        passwordAgain: '',
-        email: '',
+       name: '',
+       password: '',
+       passwordAgain: '',
+       email: '',
        }
       }
     }
 
     handleSubmit = e =>{
         e.preventDefault();
+        this.props.register(this.state.name, this.state.password, this.state.email);
+    };
+
+    handleChange = e => {
+        e.preventDefault();
+        console.log(e.target);
+        const { name, value } = e.target;
+        let formErrors = { ...this.state.formErrors };
+    
+        switch (name) {
+          case "name":
+            formErrors.name = userRegex.test(value)
+            ? ""
+            : "Username has to be at least 3 characters long and can only contain letters, numbers and .-_ as special characters";
+            break;
+          case "email":
+            formErrors.email = emailRegex.test(value)
+              ? ""
+              : "invalid email address";
+            break;
+          case "password":
+            formErrors.password =
+              value.length < 8 ? "Minimum 8 characaters required for the password" : "";
+            break;
+          case "passwordAgain":
+            formErrors.passwordAgain=  
+            formErrors.password !== formErrors.passwordAgain ? "The passwords do not match" : "";
+              break;  
+          default:
+            break;
+        }
+    
+        this.setState({ formErrors, [name]: value }, () => console.log(this.state.formErrors));
     };
 
     render() { 
@@ -40,8 +81,11 @@ class Register extends Component {
                                 style={{maxWidth: "500px"} }
                                 noValidate
                                 onChange={this.handleChange}
-                                className={this.state.formErrors.username===''?'Error':null}
+                                className={this.state.formErrors.name === ''? null:'error'}
                         />
+                        <span className="error">
+                            {this.state.formErrors.name}
+                        </span>
                     </Col>
                 </FormGroup>
                 <FormGroup className="form-3">
@@ -54,20 +98,26 @@ class Register extends Component {
                                style={{maxWidth: "500px", marginBottom: "1em"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.password===''?'Error':null}
+                               className={this.state.formErrors.password===''? null:'error'}
                         />
+                        <span>
+                            {this.state.formErrors.password}
+                        </span>
                     </Col>
                     <Label htmlFor="c-password" sm={2}>Confirm password:</Label>
                     <Col sm={10}>
                         <Input type="password" 
-                               name="password" 
+                               name="passwordAgain" 
                                id="c-password" 
                                placeholder="Your password again" 
                                style={{maxWidth: "500px"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.passwordAgain===''?'Error':null}
+                               className={this.state.formErrors.passwordAgain===''? null:'error'}
                         />
+                        <span>
+                            {this.state.formErrors.passwordAgain}
+                        </span>
                     </Col>
                 </FormGroup>
                 <FormGroup className="form-2">
@@ -80,12 +130,15 @@ class Register extends Component {
                                style={{maxWidth: "500px"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.email===''?'Error':null}
+                               className={this.state.formErrors.email===''? null:'error'}
                         />
+                        <span>
+                            {this.state.formErrors.email}
+                        </span>
                     </Col>
                 </FormGroup>
                 <div className="form-5">
-                     <Button color="primary"   type="submit" onClick={this.handleSubmit}>Register</Button>
+                     <Button color="primary"   type="submit" >Register</Button>
                      <Button color="secondary"  onClick={this.props.toLogin}>Login</Button>
                 </div>
                

@@ -32,32 +32,43 @@ class Tasks extends Component {
     };
 
     submitNewTask = ()=>{
-        this.props.postNewTask(this.state.newTaskName);
-        this.setState({newTaskName: ''});
+        if(this.state.newTaskName){
+            this.props.postNewTask(this.state.newTaskName);
+            this.setState({newTaskName: ''});
+        }
+        
     };
 
 
     render() { 
 
        const Tasks = this.props.taskList.map(task =>(
-            task.active?'':<span key={`span-${task.task_id}`}>
-                                {this.props.delete? <input type="checkbox" id={task.task_id} onChange={this.handleCheck.bind(this)}/>: ''}
+            task.active?'':<li key={`span-${task.task_id}`}>
+                                {this.props.delete? 
+                                    <input type="checkbox" 
+                                           id={task.task_id} 
+                                           onChange={this.handleCheck.bind(this)} 
+                                           style={{marginRight: ".2em", marginLeft: ".2em"}}/>: ''}
                                 <button key={task.task_id}
-                                        className="taskButton" 
+                                        className="task-button" 
                                         onClick={()=>this.props.activateTask(task.task_id)}>
                                 {task.task_name}</button>
-                            </span>
+                            </li>
             )
         );
 
         return ( 
             <div className="tasksGrid">
-                <h1>Welcome {this.props.name}</h1>
+                <h1 className="task-title">Welcome {this.props.name}</h1>
                 <div className="taskList">
-                <Button color="warning" onClick={this.props.toggle}>Task List:</Button>
+                <Button color="warning" onClick={this.props.toggle} className="list-button">Task List:</Button>
                 <Collapse isOpen={this.props.collapse}>
-                        {Tasks}
-                        {this.props.delete?<Button color="danger" onClick={()=>this.props.deleteSelected(this.state.taskToDelete)}>Delete Checked</Button>:''}
+                        <div className="tasks-div">
+                            <ul className="tasks-ul">
+                                {Tasks}
+                            </ul>
+                        </div>
+                        {this.props.delete?<Button color="danger" onClick={()=>this.props.deleteSelected(this.state.taskToDelete)} className="median-button">Delete Checked</Button>:''}
                         <Collapse isOpen={this.props.newTask}>
                         <form>
                         <Label for="task">New Task:</Label>
@@ -68,11 +79,11 @@ class Tasks extends Component {
                                 style={{maxWidth: "500px"}} 
                                 value={this.state.newTaskName} 
                                 onChange={this.handleChange.bind(this)}/>
-                        <Button color="primary" onClick={this.submitNewTask}>Create</Button>
+                        <Button color="primary" onClick={this.submitNewTask} className="median-button">Create</Button>
                         </form>
                         </Collapse>
-                        <Button color="primary" onClick={this.props.reveal}>{this.props.newTask?'Dismiss':'New Task'}</Button>
-                        <Button color="danger" onClick={this.props.toggleDelete}>{this.props.delete?'Dismiss':'Delete Tasks'}</Button>
+                        <Button color="primary" onClick={this.props.reveal} className="bottom-button">{this.props.newTask?'Dismiss':'New Task'}</Button>
+                        <Button color="danger" onClick={this.props.toggleDelete} className="bottom-button">{this.props.delete?'Dismiss':'Delete Tasks'}</Button>
                 </Collapse>  
                 </div>
                 <div className="clock">
