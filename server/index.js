@@ -21,6 +21,10 @@ app.use('/tasks', tasksAPI);
 let timesAPI = require('./api/times');
 app.use('/times', timesAPI);
 
+
+
+
+
 /*if (ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
   app.use((req, res) => {
@@ -38,6 +42,7 @@ db.query('SELECT NOW()', (err, res) => {
   if (err.error)
     return console.log(err.error);
   console.log(`PostgreSQL connected: ${res[0].now}.`);
+ 
 });
 
 

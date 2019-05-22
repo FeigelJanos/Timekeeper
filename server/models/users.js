@@ -21,6 +21,8 @@ module.exports = class Users {
   }
 
   static insert (user, password, email, callback) {
+
+    
     db.query('INSERT INTO users (user_name, password, email) VALUES ($1, $2, $3)', [user, password, email], (err, res) => {
       if (err.error)
         return callback(err);

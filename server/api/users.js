@@ -6,7 +6,7 @@ let router = express.Router();
 
 let bcrypt = require('bcrypt');
 
-let saltRounds = 10;
+
 
 
 router.get('/all', (req, res) => {
@@ -26,16 +26,25 @@ router.get('/', (req, res) => {
   });
 });
 
+
 router.post('/insert', (req, res) => {
   let password = req.body.password;
   let user = req.body.user_name;
   let email = req.body.email;
 
-  Users.insert(user, password, email, (err, result) => {
+  const saltRounds = 10;
+
+  bcrypt.genSalt(saltRounds, function(err, salt) {
+    bcrypt.hash(password, salt, function(err, hash) {
+      Users.insert(user, hash, email, (err, result) => {
     if (err)
       return res.json(err);
     return res.json(result);
+      });
+    });
   });
+
+ 
 });
 
 router.post('/login', (req, res) => {

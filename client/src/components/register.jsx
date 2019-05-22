@@ -30,12 +30,14 @@ class Register extends Component {
 
     handleSubmit = e =>{
         e.preventDefault();
-        this.props.register(this.state.name, this.state.password, this.state.email);
+        if(this.validateForm()){
+            this.props.register(this.state.name, this.state.password, this.state.email);
+        }
+        
     };
 
     handleChange = e => {
         e.preventDefault();
-        console.log(e.target);
         const { name, value } = e.target;
         let formErrors = { ...this.state.formErrors };
     
@@ -43,7 +45,7 @@ class Register extends Component {
           case "name":
             formErrors.name = userRegex.test(value)
             ? ""
-            : "Username has to be at least 3 characters long and can only contain letters, numbers and .-_ as special characters";
+            : "username must be longer than 3 letters and can only contain .-_ as special characters";
             break;
           case "email":
             formErrors.email = emailRegex.test(value)
@@ -56,13 +58,33 @@ class Register extends Component {
             break;
           case "passwordAgain":
             formErrors.passwordAgain=  
-            formErrors.password !== formErrors.passwordAgain ? "The passwords do not match" : "";
+             value !== this.state.password ? "The passwords do not match" : "";
               break;  
           default:
             break;
         }
     
-        this.setState({ formErrors, [name]: value }, () => console.log(this.state.formErrors));
+        this.setState({ formErrors, [name]: value });
+    };
+
+    validateForm = ()=>{
+        let s = { ...this.state };
+        let checker = 0;
+
+        s.formErrors.password === ''? checker +=0 : checker += 1;
+        s.formErrors.name === ''? checker +=0 : checker += 1;
+        s.formErrors.passwordAgain === ''? checker +=0 : checker += 1;
+        s.formErrors.email === ''? checker +=0 : checker += 1;
+        s.password === ''? checker += 1 : checker += 0;
+        s.passwordAgain === ''? checker += 1 : checker += 0;
+        s.name === ''? checker += 1 : checker += 0;
+        s.email === ''? checker += 1 : checker += 0;
+
+        if (checker>0){
+            return false;
+        }
+
+        return true;
     };
 
     render() { 
@@ -81,7 +103,7 @@ class Register extends Component {
                                 style={{maxWidth: "500px"} }
                                 noValidate
                                 onChange={this.handleChange}
-                                className={this.state.formErrors.name === ''? null:'error'}
+                                className={this.state.formErrors.name === ''? null:'error-input'}
                         />
                         <span className="error">
                             {this.state.formErrors.name}
@@ -98,9 +120,9 @@ class Register extends Component {
                                style={{maxWidth: "500px", marginBottom: "1em"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.password===''? null:'error'}
+                               className={this.state.formErrors.password===''? null:'error-input'}
                         />
-                        <span>
+                        <span className="error">
                             {this.state.formErrors.password}
                         </span>
                     </Col>
@@ -113,9 +135,9 @@ class Register extends Component {
                                style={{maxWidth: "500px"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.passwordAgain===''? null:'error'}
+                               className={this.state.formErrors.passwordAgain===''? null:'error-input'}
                         />
-                        <span>
+                        <span className="error">
                             {this.state.formErrors.passwordAgain}
                         </span>
                     </Col>
@@ -130,9 +152,9 @@ class Register extends Component {
                                style={{maxWidth: "500px"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.email===''? null:'error'}
+                               className={this.state.formErrors.email===''? null:'error-input'}
                         />
-                        <span>
+                        <span className="error">
                             {this.state.formErrors.email}
                         </span>
                     </Col>

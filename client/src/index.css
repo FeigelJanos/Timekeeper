@@ -199,9 +199,17 @@ box-shadow: none;
 
 .error{
   color: red;
+ }
+
+.error:empty:before {
+  content: "\00a0";
 }
 
-
+.error-input{
+  outline: none !important;
+  border:1px solid red !important;
+  box-shadow: 0 0 10px rgb(206, 113, 113) !important;
+}
 @media only screen and (min-width: 600px) { 
   .LogForm{
   height: 60vh;
