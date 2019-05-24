@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Col, Button, Form, FormGroup, Label, Input } from 'reactstrap';
 
+const userRegex = RegExp(
+    /^[a-zA-Z0-9._-]{3,}$/
+);
+
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -8,42 +12,71 @@ class Login extends Component {
       this.state = {
        username: '',
        password: '',
-       error: ''
+       error: '',
       }
     }
 
-    handleName = e =>{
 
-        this.setState({username: e.target.value})
-      
+    componentWillUpdate(nextProps, nextState){
+        if(nextProps.logError!==''&&this.props.logError===''){
+            this.checkForBackendErrors();
+        }   
     };
 
-    handlePass = e => {
+    handleChange = e =>{
+        e.preventDefault();
+        const { name, value } = e.target;
+        this.setState({ [name]: value });
 
-        this.setState({password: e.target.value})
-      
+        this.setState({ error: false });
     };
 
     handleSubmit = e =>{
         e.preventDefault();
+        if (this.checkForFrontendErrors()){
+            console.log("Login started")
+            this.props.login(this.state.username, this.state.password) 
+        }
     };
 
-    render() { 
+    checkForFrontendErrors = () =>{
+        let s = { ...this.state};
+
+        if(userRegex.test(s.username) && s.password.length >= 8 ){
+            console.log("No frontend error!");
+            this.setState({ error: "" })
+            return true;
+        }
+        
+        else{
+            console.log("Frontend error!");
+            this.setState({ error: "Wrong username or password" });
+            return false;
+        }
+    };
+
+    checkForBackendErrors = () =>{
+        this.setState({ error: "Wrong username or password" });
+    };
+
+    render() {
+
         return ( 
             <React.Fragment>
             <h1 className="log-h1">Welcome, please Log in or Register!</h1>
+            <span className=" error middle">{this.state.error}</span>
             <Form className="LogForm">
-                <span className="errorMessage">{this.state.error}</span>
-                 <FormGroup row >
-                    <Label for="name" sm={2}>Username:</Label>
+                <FormGroup row >
+                    <Label for="username" sm={2}>Username:</Label>
                     <Col sm={10}>
                         <Input  type="text" 
-                                name="name" 
-                                id="name" 
+                                name="username" 
+                                id="username" 
+                                noValidate
                                 placeholder="Your username" 
                                 style={{maxWidth: "500px"}} 
-                                value={this.state.username} 
-                                onChange={this.handleName.bind(this)}
+                                onChange={this.handleChange}
+                                className={this.state.error ?'error-input': null}
                         />
                     </Col>
                 </FormGroup>
@@ -53,10 +86,11 @@ class Login extends Component {
                         <Input  type="password" 
                                 name="password" 
                                 id="password" 
+                                noValidate
                                 placeholder="Your password" 
                                 style={{maxWidth: "500px"}} 
-                                value={this.state.password} 
-                                onChange={this.handlePass}
+                                onChange={this.handleChange}
+                                className={this.state.error ?'error-input': null}
                         />
                     </Col>
                 </FormGroup>

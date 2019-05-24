@@ -7,6 +7,7 @@ import Register from './components/register';
 
 
 
+
 class App extends Component {
   constructor(props) {
     super(props);
@@ -18,10 +19,9 @@ class App extends Component {
     newTask: false,
     delete: false,
     statistics: false,
-    user: {
-      id: 1,
-      name: ''
-    },
+    userID: '',
+    userName: '',
+    logError: '',
     tasks: [],  
     time:'' 
   }
@@ -43,17 +43,24 @@ redirectToLogReg = () =>{
   this.setState(state => ({register: !state.register, }));
 };
 
+getTasks = (user_id) =>{
+  fetch(`/tasks/all/${user_id}`)
+  .then(res => res.json())
+  .then(res => this.setState({tasks: res}));
+
+};
+
 postNewTask = (task) =>{
   fetch(`/tasks/insert`, {
     method: 'post',
     headers: {'Content-Type': 'application/json'},
     body: JSON.stringify({
       task_name: task,
-      user_id: this.state.user.id
+      user_id: this.state.userID
     })
   })
   .then(res => res.json())
-  .then(res => {this.getTasks(this.state.user.id)});
+  .then(res => {this.getTasks(this.state.userID)});
   this.setState({newTask: false, delete: false});
 };
 
@@ -66,7 +73,7 @@ deleteSelected = (selectedArr) =>{
     })
   })
   .then(res => res.json())
-  .then(res => {this.getTasks(this.state.user.id)})
+  .then(res => {this.getTasks(this.state.userID)})
   );
   this.setState({newTask: false, delete: false});
 };
@@ -80,9 +87,33 @@ console.log(`${time} time and ${finished}`);
 };
 
 login = (username, password) =>{
+  if(username && password){
+    fetch(`/users/login`, {
+    method: 'post',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      password: password,
+      user_name: username,
+    })
+  })
+  .then(res =>  res.json())
+  .then(res => 
+    {if (res.error){
+      console.log("Database error")
+      this.setState({logError: res.error});
+    }
+    else{
+      console.log("Logging in...")
+      this.setState(()=>({login: true, userID: res[0].user_id, userName: res[0].user_name, logError: ''}));
+    }});
+  }
+};
 
+
+logout = () =>{
+  this.setState(()=>({login: false, userID: '', userName: ''}));
   };
-
+    
 register = (username, password, email) =>{
   if(username && password && email){
     fetch(`/users/insert`, {
@@ -101,17 +132,6 @@ register = (username, password, email) =>{
 };
 
 
-logout = () =>{
-
-};
-  
-getTasks = (user_id) =>{
-    fetch(`/tasks/all/${user_id}`)
-    .then(res => res.json())
-    .then(res => this.setState({tasks: res}));
-
-  };
-
   render(){
 
     if(!this.state.login){
@@ -119,7 +139,10 @@ getTasks = (user_id) =>{
         <div className="Login">
           <TopBar aut={this.state.login} logout={this.logout}/>
           {this.state.register?<Register toLogin={this.redirectToLogReg} register={this.register}/>
-                              :<Login toRegister={this.redirectToLogReg} login={this.login}/> }
+                              :<Login toRegister={this.redirectToLogReg} 
+                                      login={this.login}
+                                      logError={this.state.logError}
+                              /> }
           <BottomBar />   
         </div>
       );
@@ -130,8 +153,8 @@ getTasks = (user_id) =>{
       <TopBar aut={this.state.login} logout={this.logout}/>
       <Tasks 
       onList={this.getTasks}
-      user={this.state.user.id}
-      name={this.state.user.name} 
+      user={this.state.userID}
+      name={this.state.userName} 
       taskList={this.state.tasks} 
       toggle={this.toggle} 
       collapse={this.state.collapse} 

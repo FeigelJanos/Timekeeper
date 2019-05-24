@@ -201,9 +201,18 @@ box-shadow: none;
   color: red;
  }
 
+
+
 .error:empty:before {
   content: "\00a0";
 }
+
+ .middle{
+   display: block;
+   text-align: center;
+   margin-top: 1em;
+   margin-bottom: 1em;
+ }
 
 .error-input{
   outline: none !important;

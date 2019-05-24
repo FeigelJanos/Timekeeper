@@ -6,7 +6,7 @@ const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
   );
 const userRegex = RegExp(
-                            /^[a-zA-Z0-9._-]{3,}$/
+                            /^[a-zA-Z0-9._-]{3,30}$/
 );
 
 class Register extends Component {
@@ -24,6 +24,7 @@ class Register extends Component {
        password: '',
        passwordAgain: '',
        email: '',
+       empty: ''
        }
       }
     }
@@ -40,12 +41,13 @@ class Register extends Component {
         e.preventDefault();
         const { name, value } = e.target;
         let formErrors = { ...this.state.formErrors };
-    
+        let s = { ...this.state};
+            
         switch (name) {
           case "name":
             formErrors.name = userRegex.test(value)
             ? ""
-            : "username must be longer than 3 letters and can only contain .-_ as special characters";
+            : "username must be longer than 3 letters, shorter than 30 and can only contain .-_ as special characters";
             break;
           case "email":
             formErrors.email = emailRegex.test(value)
@@ -63,24 +65,32 @@ class Register extends Component {
           default:
             break;
         }
-    
+
         this.setState({ formErrors, [name]: value });
-    };
+
+        if(s.email!==''&&s.password!==''&&s.passwordAgain!==''&&s.name!==''){
+            this.setState(state => (state.formErrors.empty = ''));
+        }
+
+ };
 
     validateForm = ()=>{
         let s = { ...this.state };
         let checker = 0;
-
+        
         s.formErrors.password === ''? checker +=0 : checker += 1;
         s.formErrors.name === ''? checker +=0 : checker += 1;
         s.formErrors.passwordAgain === ''? checker +=0 : checker += 1;
         s.formErrors.email === ''? checker +=0 : checker += 1;
-        s.password === ''? checker += 1 : checker += 0;
-        s.passwordAgain === ''? checker += 1 : checker += 0;
-        s.name === ''? checker += 1 : checker += 0;
-        s.email === ''? checker += 1 : checker += 0;
-
+       
+        if(s.password===''||s.passwordAgain===''||s.name===''||s.email===''){
+            checker += 1;
+            this.setState(state => (state.formErrors.empty = 'Please fill in the empty fields'));
+        }
+        
+      
         if (checker>0){
+            console.log(this.state.formErrors);
             return false;
         }
 
@@ -92,6 +102,9 @@ class Register extends Component {
             <React.Fragment>
                 <h1 className="reg-h1"> Welcome Guest!</h1>
                 <h2 className="reg-h2">Please fill out this short registration form:</h2>
+                <span className="error middle">
+                            {this.state.formErrors.empty}
+                </span>
             <Form className="RegForm" onSubmit={this.handleSubmit} noValidate>
                  <FormGroup className="form-1">
                     <Label htmlFor="name" sm={2}>Username:</Label>
@@ -103,7 +116,7 @@ class Register extends Component {
                                 style={{maxWidth: "500px"} }
                                 noValidate
                                 onChange={this.handleChange}
-                                className={this.state.formErrors.name === ''? null:'error-input'}
+                                className={this.state.formErrors.name === '' ? null:'error-input'}
                         />
                         <span className="error">
                             {this.state.formErrors.name}
@@ -120,7 +133,7 @@ class Register extends Component {
                                style={{maxWidth: "500px", marginBottom: "1em"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.password===''? null:'error-input'}
+                               className={this.state.formErrors.password==='' ? null:'error-input'}
                         />
                         <span className="error">
                             {this.state.formErrors.password}
@@ -135,7 +148,7 @@ class Register extends Component {
                                style={{maxWidth: "500px"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.passwordAgain===''? null:'error-input'}
+                               className={this.state.formErrors.passwordAgain==='' ? null:'error-input'}
                         />
                         <span className="error">
                             {this.state.formErrors.passwordAgain}
@@ -152,7 +165,7 @@ class Register extends Component {
                                style={{maxWidth: "500px"}}
                                noValidate
                                onChange={this.handleChange}
-                               className={this.state.formErrors.email===''? null:'error-input'}
+                               className={this.state.formErrors.email==='' ? null:'error-input'}
                         />
                         <span className="error">
                             {this.state.formErrors.email}

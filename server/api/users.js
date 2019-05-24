@@ -7,7 +7,14 @@ let router = express.Router();
 let bcrypt = require('bcrypt');
 
 
+/*function checkPassword(result, password){
+    hash = result[0].password;
+    console.log(hash, password)
 
+  bcrypt.compare(password, hash, function(err, res) {
+      return res;
+});
+}*/
 
 router.get('/all', (req, res) => {
   Users.retrieveAll((err, users) => {
@@ -50,11 +57,12 @@ router.post('/insert', (req, res) => {
 router.post('/login', (req, res) => {
   let user = req.body.user_name;
   let password = req.body.password;
-
+ 
   Users.login(user, password, (err, result) => {
-    if (err)
+    if (err){
       return res.json(err);
-    return res.json(result);
+    }
+      return res.json(result);
   });
 });
 
