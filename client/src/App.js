@@ -6,8 +6,6 @@ import Tasks from './components/tasks';
 import Register from './components/register';
 
 
-
-
 class App extends Component {
   constructor(props) {
     super(props);
@@ -23,7 +21,10 @@ class App extends Component {
     userName: '',
     logError: '',
     tasks: [],  
-    time:'' 
+    activeTask: {},
+    time:'',
+    timerRuns: false,
+    logActive: false
   }
 }
 
@@ -40,14 +41,61 @@ getNewTask = () =>{
 };
 
 redirectToLogReg = () =>{
-  this.setState(state => ({register: !state.register, }));
+  this.setState(state => ({register: !state.register }));
 };
+
+toggleLogs = () =>{
+  this.setState(state => ({logActive: !state.logActive }));
+};
+
+registerTimer = (status) =>{
+  switch(status){
+    case 'start':
+      this.setState({ timerRuns: true });
+      break;
+    case 'stop':
+        this.setState({ timerRuns: false });
+      break;
+    case 'finish':
+        this.setState({ timerRuns: false });
+      break;    
+    default:
+      break;  
+  }
+};
+
+deactivateTask = (time, finished) =>{
+  fetch(`/times/insert`, {
+    method: 'post',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      time: time,
+      finished: finished,
+      task_id: this.state.activeTask.task_id
+    })
+  })
+  .then(res => res.json())
+  .then(res => console.log(`${time} time and ${finished}`));
+  
+  };
 
 getTasks = (user_id) =>{
   fetch(`/tasks/all/${user_id}`)
   .then(res => res.json())
-  .then(res => this.setState({tasks: res}));
+  .then(res => res.filter(task => task.active===false))
+  .then(res => this.setState({tasks: res}, ()=>{this.state.tasks===res?
+  console.log('tasks in state and database are the same', this.state.tasks):console.log('tasks are different in state and database')}));
+ };
 
+getActiveTask = (user_id) =>{
+  fetch(`/tasks/active/${user_id}`)
+  .then(res => res.json())
+  .then((res) => {
+    const at = res[0];
+    
+    this.setState({activeTask: at}, ()=>{
+    this.state.activeTask===at ?
+    console.log('active task updated', this.state.activeTask) : console.log('active task not updated')})});
 };
 
 postNewTask = (task) =>{
@@ -73,17 +121,43 @@ deleteSelected = (selectedArr) =>{
     })
   })
   .then(res => res.json())
-  .then(res => {this.getTasks(this.state.userID)})
+    .then(res => {this.getTasks(this.state.userID)})
   );
   this.setState({newTask: false, delete: false});
 };
 
-activateTask = (id) =>{
-console.log(id)
-};
-
-deactivateTask = (time, finished) =>{
-console.log(`${time} time and ${finished}`);
+activateTask = async (clickedId) =>{
+  if(!this.state.timerRuns){
+    try {
+      await Promise.all([
+        fetch(`/tasks/deactivate`, {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            user_id: this.state.userID
+          })
+        }).then(value => value.json()),
+        fetch(`/tasks/activate`, {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            toActive_id: clickedId,
+          })
+        }).then(value => value.json()),
+        fetch(`/tasks/all/${this.state.userID}`).then(value => value.json()),
+        fetch(`/tasks/active/${this.state.userID}`).then(value => value.json())
+      ]).then(allResponses => {
+        const getTasks = allResponses[2].filter(res=> res.active === false) 
+        const getActiveTask = allResponses[3][0]  
+      
+      this.setState({tasks: getTasks, activeTask: getActiveTask},()=>{this.state.tasks ===getTasks && this.state.activeTask === getActiveTask 
+        ? console.log("Active task switched succesfully"):console.log("Houston, we've got a problem")})
+      });
+    }
+    catch(err) {
+      console.log(err);
+    };
+  }
 };
 
 login = (username, password) =>{
@@ -97,16 +171,10 @@ login = (username, password) =>{
     })
   })
   .then(res =>  res.json())
-  .then(res => 
-    {if (res.error){
-      console.log("Database error")
-      this.setState({logError: res.error});
-    }
-    else{
-      console.log("Logging in...")
-      this.setState(()=>({login: true, userID: res[0].user_id, userName: res[0].user_name, logError: ''}));
-    }});
-  }
+    .then (res =>  {res.error?this.setState({logError: res.error})
+    :this.setState(()=>({login: true, userID: res[0].user_id, userName: res[0].user_name, logError: ''}))
+  });
+}
 };
 
 
@@ -153,9 +221,11 @@ register = (username, password, email) =>{
       <TopBar aut={this.state.login} logout={this.logout}/>
       <Tasks 
       onList={this.getTasks}
+      onStart={this.getActiveTask}
       user={this.state.userID}
       name={this.state.userName} 
       taskList={this.state.tasks} 
+      activeTask={this.state.activeTask}
       toggle={this.toggle} 
       collapse={this.state.collapse} 
       newTask={this.state.newTask} 
@@ -166,6 +236,9 @@ register = (username, password, email) =>{
       deactivateTask={this.deactivateTask}
       postNewTask={this.postNewTask}
       deleteSelected={this.deleteSelected}
+      registerTimer={this.registerTimer}
+      logActive={this.state.logActive}
+      toggleLogs={this.toggleLogs}
       />
      
     </div>

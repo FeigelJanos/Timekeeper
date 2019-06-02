@@ -36,4 +36,21 @@ module.exports = class Tasks {
       callback(res);
     });
   }
+
+  static activate (activate, callback) {
+    db.query('UPDATE tasks SET active = true WHERE task_id = $1;', [activate], (err, res) => {
+      if (err.error)
+        return callback(err);
+      callback(res);
+    });
+  }
+
+  static deactivate (user, callback) {
+    db.query('UPDATE tasks SET active = false WHERE user_id = $1 AND active = true', [user], (err, res) => {
+      if (err.error)
+        return callback(err);
+      callback(res);
+    });
+  }
+
 }

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Button, Collapse, Label, Input } from 'reactstrap';
 import Stopwatch from './stopwatch';
+import Logs from './logs';
 
 class Tasks extends Component {
     constructor(props) {
@@ -8,18 +9,24 @@ class Tasks extends Component {
       
       this.state = {
        taskToDelete: [],
-       newTaskName: ''
+       newTaskName: '',
+       activeLogs: []
       }
     }
 
 
 
-    componentDidMount(){
+    componentWillMount(){
        
         let user_id = this.props.user;
         this.props.onList(user_id);
+        this.props.onStart(user_id)
     };
-    
+
+    componentDidUpdate(){
+
+    };
+
     handleChange(event) {
 
         this.setState({newTaskName: event.target.value})
@@ -38,12 +45,41 @@ class Tasks extends Component {
         }
         
     };
+    
+    selectLogs = (user=this.props.user, task=this.props.activeTask.task_id) =>{
+        let now = new Date();
+        let dd = String(now.getDate()).padStart(2, '0');
+        let mm = String(now.getMonth() + 1).padStart(2, '0'); //January is 0!
+        let yyyy = now.getFullYear();
 
+        now = yyyy + '-' + mm + '-' + dd;
+       
+        
+        fetch(`/times/from`, {
+          method: 'post',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            task_id: task,
+            user_id: user,
+            date: now
+          })
+        })
+        .then(res => res.json())
+        .then(res => {this.setState({activeLogs: res})});
+    };
 
     render() { 
 
-       const Tasks = this.props.taskList.map(task =>(
-            task.active?'':<li key={`span-${task.task_id}`}>
+        return ( 
+            <div className="tasksGrid">
+                <h1 className="task-title">Welcome {this.props.name}</h1>
+                <div className="taskList">
+                <Button color="warning" onClick={this.props.toggle} className="list-button">Task List:</Button>
+                <Collapse isOpen={this.props.collapse}>
+                        <div className="tasks-div">
+                            <ul className="tasks-ul">
+                                {this.props.taskList.map(task =>(
+                                    <li key={`span-${task.task_id}`}>
                                 {this.props.delete? 
                                     <input type="checkbox" 
                                            id={task.task_id} 
@@ -55,17 +91,7 @@ class Tasks extends Component {
                                 {task.task_name}</button>
                             </li>
             )
-        );
-
-        return ( 
-            <div className="tasksGrid">
-                <h1 className="task-title">Welcome {this.props.name}</h1>
-                <div className="taskList">
-                <Button color="warning" onClick={this.props.toggle} className="list-button">Task List:</Button>
-                <Collapse isOpen={this.props.collapse}>
-                        <div className="tasks-div">
-                            <ul className="tasks-ul">
-                                {Tasks}
+        )}
                             </ul>
                         </div>
                         {this.props.delete?<Button color="danger" onClick={()=>this.props.deleteSelected(this.state.taskToDelete)} className="median-button">Delete Checked</Button>:''}
@@ -89,9 +115,20 @@ class Tasks extends Component {
                 <div className="clock">
 
                     <div className="timer">
-                    <Stopwatch taskList={this.props.taskList} deactivateTask={this.props.deactivateTask} />
+                    <Stopwatch taskList={this.props.taskList} 
+                               activeTask={this.props.activeTask}
+                               deactivateTask={this.props.deactivateTask}
+                               registerTimer={this.props.registerTimer}
+                               toggleLogs={this.props.toggleLogs}
+                               selectLogs={this.selectLogs}   
+                    />
                     </div>
                 </div>
+                <div className="logs">
+                    <div className="log-box">
+                        {this.props.logActive?<Logs  />:''}                 
+                    </div>
+                </div> 
             </div>
          );
     }

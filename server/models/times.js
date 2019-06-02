@@ -20,8 +20,8 @@ module.exports = class Times {
   }
 
 
-  static insert (task, time, callback) {
-    db.query('INSERT INTO logs (task_id, log_time, log_date) VALUES ($1, $2, DEFAULT)', [task, time], (err, res) => {
+  static insert (task, time, finished, callback) {
+    db.query('INSERT INTO logs (task_id, log_time, finished, log_date) VALUES ($1, $2, $3, DEFAULT)', [task, time, finished], (err, res) => {
       if (err.error)
         return callback(err);
       callback(res);
@@ -29,11 +29,4 @@ module.exports = class Times {
   }
 
 
-  static addTime (task, time, callback) {
-    db.query('UPDATE logs SET log_time = log_time + $2 WHERE task_id = $1', [task, time], (err, res) => {
-      if (err.error)
-        return callback(err);
-      callback(res);
-    });
-  }
-}
+ }

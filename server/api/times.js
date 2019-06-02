@@ -15,7 +15,7 @@ router.get('/all', (req, res) => {
   });
 });
 
-router.get('/from', (req, res) => {
+router.post('/from', (req, res) => {
   let id = req.body.user_id;
   let from = req.body.start_date;
   
@@ -28,25 +28,16 @@ Times.fromToNow(id, from, (err, users) => {
 });
 
 router.post('/insert', (req, res) => {
-  let time = 'interval "+00:00:00"';
+  let time = req.body.time;
+  let finished = req.body.finished;
   let task = req.body.task_id;
 
-  Times.insert(task, time, (err, result) => {
+  Times.insert(task, time, finished, (err, result) => {
     if (err)
       return res.json(err);
     return res.json(result);
   });
 });
 
-router.post('/addTime', (req, res) => {
-  let time = req.body.log_time;
-  let task = req.body.task_id;
-  
-    Times.addTime(task, time, (err, result) => {
-      if (err)
-        return res.json(err);
-      return res.json(result);
-    });
-  });
 
 module.exports = router;

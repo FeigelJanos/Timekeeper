@@ -34,7 +34,6 @@ class Login extends Component {
     handleSubmit = e =>{
         e.preventDefault();
         if (this.checkForFrontendErrors()){
-            console.log("Login started")
             this.props.login(this.state.username, this.state.password) 
         }
     };
@@ -43,13 +42,11 @@ class Login extends Component {
         let s = { ...this.state};
 
         if(userRegex.test(s.username) && s.password.length >= 8 ){
-            console.log("No frontend error!");
             this.setState({ error: "" })
             return true;
         }
         
         else{
-            console.log("Frontend error!");
             this.setState({ error: "Wrong username or password" });
             return false;
         }

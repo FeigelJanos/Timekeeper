@@ -190,8 +190,9 @@ box-shadow: none;
   padding-bottom: 2em;
   padding-left: 3em;
   padding-right: 3em;
+  min-width: 350px;
   background-color: #333333;
-  border: 2px solid #151515;
+  border: 2px solid #202020;
   text-align: center;
   margin-top: 1em;
   border-radius: 5px;
@@ -285,12 +286,18 @@ padding-left: 13vw;
   overflow-y: auto;
 }
 
+.task-title{
+  margin-top: 4rem;
+  margin-bottom: 6rem;
+}
+
 .Stopwatch{
   margin-top:  0em;
   padding-top: 3em;
   padding-bottom: 3em;
   padding-left: 4em;
   padding-right: 4em;
+  min-width: 500px;
 }
 
 .stopwatch-display{

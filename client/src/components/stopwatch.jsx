@@ -4,8 +4,8 @@ class Stopwatch extends Component {
   state = {
     timerOn: false,
     timerStart: 0,
-    timerTime: 0
-  };
+    timerTime: 0,
+    };
 
   startTimer = () => {
     this.setState({
@@ -18,11 +18,19 @@ class Stopwatch extends Component {
         timerTime: Date.now() - this.state.timerStart
       });
     }, 10);
+    this.props.registerTimer('start');
+    console.log('timer started');
   };
 
   pauseTimer = () => {
     this.setState({ timerOn: false });
     clearInterval(this.timer);
+  };
+
+  activateStatistics = () =>{
+    this.setState({ timerOn: false });
+    clearInterval(this.timer);
+    this.props.toggleLogs();
   };
 
   finishedTimer = () => {
@@ -36,6 +44,8 @@ class Stopwatch extends Component {
     });
     
     clearInterval(this.timer);
+    this.props.registerTimer('finish');
+    console.log('timer finished');
   };
 
   stopTimer = () => {
@@ -49,6 +59,8 @@ class Stopwatch extends Component {
     });
     
     clearInterval(this.timer);
+    this.props.registerTimer('stop');
+    console.log('timer stopped');
   };
 
   render() {
@@ -59,7 +71,7 @@ class Stopwatch extends Component {
     return (
       <div className="Stopwatch">
          <div className="activeTask">
-          {this.props.taskList.map(task => task.active?<button key={task.task_id} onClick={this.stopTimer} className="task-active">{task.task_name}</button>:'')}
+          <button onClick={this.state.timerOn?null:this.activateStatistics} className="task-active" >{this.props.activeTask.task_name}</button>
         </div>
         <div className="stopwatch-display">
           {hours} : {minutes} : {seconds} 
@@ -71,7 +83,6 @@ class Stopwatch extends Component {
           <button onClick={this.finishedTimer} className="check-button"><i className="fas fa-check-square"></i></button>
     
           <button onClick={this.stopTimer} className="stop-button"><i className="fas fa-stop"></i></button>
-        
       </div>
     );
   }
