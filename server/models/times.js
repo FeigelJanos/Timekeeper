@@ -10,8 +10,8 @@ module.exports = class Times {
     });
   }
 
-  static fromToNow (user, from, callback) {
-    db.query('SELECT logs.log_date, logs.log_time, logs.task_id, tasks.task_name, tasks.user_id FROM logs JOIN tasks ON logs.task_id = tasks.task_id WHERE tasks.user_id = $1 AND logs.log_date >= $2', [user, from], (err, res) => {
+  static fromToNow (task_id, user_id, from, callback) {
+    db.query('SELECT logs.log_time, logs.task_id, tasks.task_name, tasks.user_id FROM logs JOIN tasks ON logs.task_id = tasks.task_id WHERE tasks.user_id = $1 AND logs.task_id = $2 AND logs.log_date >= $3::date', [user_id, task_id, from], (err, res) => {
       if (err.error){
         return callback(err);
       }

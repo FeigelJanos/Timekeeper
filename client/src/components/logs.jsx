@@ -8,7 +8,11 @@ class Logs extends Component {
 
 
     render() { 
-        return ( <p>Valami</p> );
+        return ( <div className="Logs">
+                    <h2>You spent on this task:</h2>
+                    <h2>today.</h2>
+
+            </div> );
     }
 }
  

@@ -16,11 +16,12 @@ router.get('/all', (req, res) => {
 });
 
 router.post('/from', (req, res) => {
-  let id = req.body.user_id;
-  let from = req.body.start_date;
+  let task_id = req.body.task_id
+  let user_id = req.body.user_id;
+  let from = req.body.date;
   
 
-Times.fromToNow(id, from, (err, users) => {
+Times.fromToNow(task_id, user_id, from, (err, users) => {
   if (err)
     return res.json(err);
   return res.json(users);

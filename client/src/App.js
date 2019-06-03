@@ -74,9 +74,7 @@ deactivateTask = (time, finished) =>{
       task_id: this.state.activeTask.task_id
     })
   })
-  .then(res => res.json())
-  .then(res => console.log(`${time} time and ${finished}`));
-  
+  .then(res => res.json());
   };
 
 getTasks = (user_id) =>{

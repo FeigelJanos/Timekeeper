@@ -20,17 +20,15 @@ class Tasks extends Component {
        
         let user_id = this.props.user;
         this.props.onList(user_id);
-        this.props.onStart(user_id)
+        this.props.onStart(user_id);
+      
+       
     };
 
-    componentDidUpdate(){
-
-    };
-
-    handleChange(event) {
+     handleChange(event) {
 
         this.setState({newTaskName: event.target.value})
-      
+        console.log(this.state.activeLogs)
       };
 
     handleCheck(event){
@@ -52,8 +50,9 @@ class Tasks extends Component {
         let mm = String(now.getMonth() + 1).padStart(2, '0'); //January is 0!
         let yyyy = now.getFullYear();
 
-        now = yyyy + '-' + mm + '-' + dd;
-       
+        let n = yyyy + '-' + mm + '-' + dd;
+        now = n.toString();
+       console.log(user, task, now);
         
         fetch(`/times/from`, {
           method: 'post',
@@ -65,7 +64,8 @@ class Tasks extends Component {
           })
         })
         .then(res => res.json())
-        .then(res => {this.setState({activeLogs: res})});
+        .then(res=>console.log(res));
+        //.then(res => {this.setState({activeLogs: res})});
     };
 
     render() { 

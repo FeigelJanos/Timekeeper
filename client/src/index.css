@@ -198,6 +198,21 @@ box-shadow: none;
   border-radius: 5px;
 }
 
+.Logs{
+  display: inline-block;
+  padding-top: 2em;
+  padding-bottom: 2em;
+  padding-left: 2em;
+  padding-right: 2em;
+  min-width: 350px;
+  background-color: #333333;
+  border: 2px solid #202020;
+  text-align: center;
+  margin-top: 1em;
+  border-radius: 5px;
+  color: whitesmoke;
+}
+
 .error{
   color: red;
  }
@@ -293,10 +308,19 @@ padding-left: 13vw;
 
 .Stopwatch{
   margin-top:  0em;
+  margin-bottom: 3em;
   padding-top: 3em;
   padding-bottom: 3em;
   padding-left: 4em;
   padding-right: 4em;
+  min-width: 500px;
+}
+
+.Logs{
+  padding-top: 3em;
+  padding-bottom: 3em;
+  padding-left: 2em;
+  padding-right: 2em;
   min-width: 500px;
 }
 

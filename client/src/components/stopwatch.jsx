@@ -31,6 +31,7 @@ class Stopwatch extends Component {
     this.setState({ timerOn: false });
     clearInterval(this.timer);
     this.props.toggleLogs();
+    this.props.selectLogs();
   };
 
   finishedTimer = () => {
@@ -62,6 +63,10 @@ class Stopwatch extends Component {
     this.props.registerTimer('stop');
     console.log('timer stopped');
   };
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
+   };
 
   render() {
     const { timerTime } = this.state;
