@@ -10,7 +10,7 @@ class Tasks extends Component {
       this.state = {
        taskToDelete: [],
        newTaskName: '',
-       activeLogs: []
+       activeLogs: [],
       }
     }
 
@@ -26,9 +26,7 @@ class Tasks extends Component {
     };
 
      handleChange(event) {
-
-        this.setState({newTaskName: event.target.value})
-        console.log(this.state.activeLogs)
+        this.setState({newTaskName: event.target.value});
       };
 
     handleCheck(event){
@@ -45,6 +43,17 @@ class Tasks extends Component {
     };
     
     selectLogs = (user=this.props.user, task=this.props.activeTask.task_id) =>{
+
+        let at= {}
+
+        if(!task){
+            fetch(`/tasks/active/${user}`)
+            .then(res => res.json())
+            .then((res) => {
+               at = res[0]})
+            .then(task= at.task_id);   
+        }
+
         let now = new Date();
         let dd = String(now.getDate()).padStart(2, '0');
         let mm = String(now.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -52,7 +61,7 @@ class Tasks extends Component {
 
         let n = yyyy + '-' + mm + '-' + dd;
         now = n.toString();
-       console.log(user, task, now);
+
         
         fetch(`/times/from`, {
           method: 'post',
@@ -64,8 +73,7 @@ class Tasks extends Component {
           })
         })
         .then(res => res.json())
-        .then(res=>console.log(res));
-        //.then(res => {this.setState({activeLogs: res})});
+        .then(res => {this.setState({activeLogs: res})});
     };
 
     render() { 
@@ -112,22 +120,21 @@ class Tasks extends Component {
                         <Button color="danger" onClick={this.props.toggleDelete} className="bottom-button">{this.props.delete?'Dismiss':'Delete Tasks'}</Button>
                 </Collapse>  
                 </div>
-                <div className="clock">
-
-                    <div className="timer">
-                    <Stopwatch taskList={this.props.taskList} 
-                               activeTask={this.props.activeTask}
-                               deactivateTask={this.props.deactivateTask}
-                               registerTimer={this.props.registerTimer}
-                               toggleLogs={this.props.toggleLogs}
-                               selectLogs={this.selectLogs}   
-                    />
-                    </div>
-                </div>
-                <div className="logs">
-                    <div className="log-box">
-                        {this.props.logActive?<Logs  />:''}                 
-                    </div>
+                <div>
+                    <span className="clock">
+                        <Stopwatch 
+                                user={this.props.user}
+                                taskList={this.props.taskList} 
+                                activeTask={this.props.activeTask}
+                                deactivateTask={this.props.deactivateTask}
+                                registerTimer={this.props.registerTimer}
+                                toggleLogs={this.props.toggleLogs}
+                                selectLogs={this.selectLogs}   
+                        />
+                    </span>
+                    <span className="logs">
+                        {this.props.logActive?<Logs  activeLogs={this.state.activeLogs}/>:''}                 
+                    </span>
                 </div> 
             </div>
          );

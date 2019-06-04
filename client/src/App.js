@@ -81,8 +81,7 @@ getTasks = (user_id) =>{
   fetch(`/tasks/all/${user_id}`)
   .then(res => res.json())
   .then(res => res.filter(task => task.active===false))
-  .then(res => this.setState({tasks: res}, ()=>{this.state.tasks===res?
-  console.log('tasks in state and database are the same', this.state.tasks):console.log('tasks are different in state and database')}));
+  .then(res => this.setState({tasks: res}));
  };
 
 getActiveTask = (user_id) =>{
@@ -91,9 +90,7 @@ getActiveTask = (user_id) =>{
   .then((res) => {
     const at = res[0];
     
-    this.setState({activeTask: at}, ()=>{
-    this.state.activeTask===at ?
-    console.log('active task updated', this.state.activeTask) : console.log('active task not updated')})});
+    this.setState({activeTask: at})});
 };
 
 postNewTask = (task) =>{
@@ -148,8 +145,7 @@ activateTask = async (clickedId) =>{
         const getTasks = allResponses[2].filter(res=> res.active === false) 
         const getActiveTask = allResponses[3][0]  
       
-      this.setState({tasks: getTasks, activeTask: getActiveTask},()=>{this.state.tasks ===getTasks && this.state.activeTask === getActiveTask 
-        ? console.log("Active task switched succesfully"):console.log("Houston, we've got a problem")})
+      this.setState({tasks: getTasks, activeTask: getActiveTask, logActive: false})
       });
     }
     catch(err) {

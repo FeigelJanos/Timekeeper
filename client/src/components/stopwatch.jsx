@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 
 class Stopwatch extends Component {
-  state = {
+  constructor(props) {
+    super(props);
+  
+  this.state = {
     timerOn: false,
     timerStart: 0,
-    timerTime: 0,
+    timerTime: 0
     };
+  }
 
   startTimer = () => {
     this.setState({
@@ -19,7 +23,6 @@ class Stopwatch extends Component {
       });
     }, 10);
     this.props.registerTimer('start');
-    console.log('timer started');
   };
 
   pauseTimer = () => {
@@ -46,7 +49,6 @@ class Stopwatch extends Component {
     
     clearInterval(this.timer);
     this.props.registerTimer('finish');
-    console.log('timer finished');
   };
 
   stopTimer = () => {
@@ -61,7 +63,6 @@ class Stopwatch extends Component {
     
     clearInterval(this.timer);
     this.props.registerTimer('stop');
-    console.log('timer stopped');
   };
 
   componentWillUnmount() {
@@ -76,7 +77,9 @@ class Stopwatch extends Component {
     return (
       <div className="Stopwatch">
          <div className="activeTask">
-          <button onClick={this.state.timerOn?null:this.activateStatistics} className="task-active" >{this.props.activeTask.task_name}</button>
+          <button onClick={this.state.timerOn?null:this.activateStatistics} className="task-active" >{this.props.activeTask?
+                                                                                                      this.props.activeTask.task_name
+                                                                                                      :''}</button>
         </div>
         <div className="stopwatch-display">
           {hours} : {minutes} : {seconds} 
